@@ -58,8 +58,14 @@ function queueSpotifyRequest(requestFn) {
     });
 }
 
+// Azure-compatible database path
+const dbPath = process.env.NODE_ENV === 'production' 
+  ? '/home/site/wwwroot/song_catalog.db'  // Persistent storage on Azure
+  : 'song_catalog.db';                    // Local development
 // Initialize SQLite database
-const db = new sqlite3.Database('song_catalog.db');
+const db = new sqlite3.Database(dbPath);
+// Add WAL mode for better Azure compatibility
+db.run('PRAGMA journal_mode=WAL;');
 
 // Create tables
 db.serialize(() => {
