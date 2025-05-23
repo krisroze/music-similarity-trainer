@@ -8,8 +8,15 @@ const app = express();
 const PORT = 3000;
 
 // Spotify API credentials
-const CLIENT_ID = '4c63286e24f24431bda7061eba998438'; // Replace with your actual Client ID
-const CLIENT_SECRET = '31d2193727434ff98c08be4f331c869f'; // Replace with your actual Client Secret
+let config;
+try {
+    config = require('./config.js');
+} catch (error) {
+    config = {}; // Fallback if config.js doesn't exist
+}
+
+const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID || config.SPOTIFY_CLIENT_ID || 'fallback_id';
+const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET || config.SPOTIFY_CLIENT_SECRET || 'fallback_secret';
 
 // Middleware
 app.use(cors());
